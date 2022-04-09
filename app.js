@@ -84,7 +84,7 @@ app.post('/campgrounds' , validateCampground , catchAsync(async (req , res) => {
 
 //  Reading data From Database
 app.get('/campgrounds/:id' , catchAsync(async( req , res) => {
-    const campground = await Campground.findById(req.params.id)
+    const campground = await Campground.findById(req.params.id).populate('reviews');
     res.render('campgrounds/show.ejs' , { campground });
 }))
 
@@ -120,6 +120,8 @@ app.post('/campgrounds/:id/reviews' , validateReview ,  catchAsync(async (req , 
 }))
 
 
+
+// error handling
 app.all('*' , (req , res , next) => {
     next(new ExpressError('Page Not Found' ,404))
 })
