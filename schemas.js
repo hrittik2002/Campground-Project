@@ -1,3 +1,8 @@
+/**
+ * Here with the help of Joi we are going to validate our schema from 
+ * server side
+ */
+
 const Joi = require('joi');
 
 module.exports.campgroundSchema = Joi.object({
@@ -7,5 +12,12 @@ module.exports.campgroundSchema = Joi.object({
         image : Joi.string().required(),
         location : Joi.string().required(),
         description : Joi.string().required()
+    }).required()
+});
+
+module.exports.reviewSchema = Joi.object({
+    review : Joi.object({
+        rating : Joi.number().required(),
+        body : Joi.string().required()
     }).required()
 });
