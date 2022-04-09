@@ -1,17 +1,25 @@
 <% layout('layouts/boilerplate.ejs') %>
 
     <div class="row">
-        <div class="col-6 offset-3">
+
+
+        <div class="col-6">
 
 
             <div class="card">
                 <img src="<%= campground.image %> " class="card-img-top" alt="...">
                 <div class="card-body">
-                    <h5 class="card-title"><%= campground.title %></h5>
-                    <p class="card-text"><%= campground.description %></p>
+                    <h5 class="card-title">
+                        <%= campground.title %>
+                    </h5>
+                    <p class="card-text">
+                        <%= campground.description %>
+                    </p>
                 </div>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item text-muted"><%= campground.location %></li>
+                    <li class="list-group-item text-muted">
+                        <%= campground.location %>
+                    </li>
                     <li class="list-group-item">$<%= campground.price %>/night</li>
                 </ul>
                 <div class="card-body">
@@ -21,14 +29,16 @@
                     </form>
                 </div>
             </div>
+        </div>
 
 
-            <!-------------   Review Section  -------------->
-
+        <!-------------   Review Section  -------------->
+        <div class="col-6">
             <!-- Createing review -->
             <h2>Leave a Review</h2>
 
-            <form action="/campgrounds/<%= campground._id %>/reviews" method="POST" class="mb-3 validated-form" novalidate>
+            <form action="/campgrounds/<%= campground._id %>/reviews" method="POST" class="mb-3 validated-form"
+                novalidate>
                 <div class="mb-3">
                     <label class="form-label" for="rating">Rating</label>
                     <input class="form-range" type="range" min="1" max="5" name="review[rating]" id="rating">
@@ -42,18 +52,23 @@
             </form>
 
 
-            <!-- Reading review -->
-            <% for (let review of campground.reviews){ %> 
+            <!-- Reading & delete review -->
+            <% for (let review of campground.reviews){ %>
 
-            <div class="mb-3">
-                <p>Rating : <%= review.rating %> </p>
-                <p>Review : <%= review.body %> </p>
-            </div>
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Rating : <%= review.rating %>
+                        </h5>
+                        <p class="card-text">Review : <%= review.body %>
+                        </p>
+                        <form action="/campgrounds/<%= campground._id %>/reviews/<%= review._id %>?_method=DELETE"
+                            method="POST">
+                            <button class="btn btn-sm btn-danger">Delete</button>
+                        </form>
+                    </div>
+                </div>
 
-            <%}%> 
-
+                <%}%>
         </div>
+
     </div>
-
-
-    
