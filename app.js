@@ -38,6 +38,7 @@ app.set('views' , path.join(__dirname , 'views'))
 
 app.use(express.urlencoded({ extended : true }))
 app.use(methodOverride('_method'));
+app.use(express.static(path.join(__dirname , 'public')))
 
 
 app.use("/campgrounds" , campgrounds);
@@ -47,7 +48,11 @@ app.get('/' , (req ,res)=>{
     res.render('home.ejs')
 })
 
-// error handling
+/**
+ * ***********************************************
+ *                ERROR HANDLING
+ * ***********************************************
+ */
 app.all('*' , (req , res , next) => {
     next(new ExpressError('Page Not Found' ,404))
 })
@@ -57,6 +62,9 @@ app.use((err , req , res , next)=>{
     if(!err.message) err.message = 'Something went wrong!';
     res.status(statusCode).render('error.ejs' , { err });
 })
+
+
+
 
 app.listen(3000 , () => {
     console.log("Serving port at 3000")
