@@ -1,0 +1,11 @@
+/**
+ * Middleware to check whether the user is logged in or not
+ */
+
+module.exports.isLoggedIn = (req , res , next) =>{
+    if(!req.isAuthenticated()){
+        req.flash('error' , 'you must be signed in first!')
+        return res.redirect('/login')
+    }
+    next()
+}
