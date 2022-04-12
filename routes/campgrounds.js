@@ -4,7 +4,7 @@ const catchAsync = require('../utils/catchAsync.js')
 const {campgroundSchema} = require('../schemas.js');
 const ExpressError = require('../utils/ExpressError.js')
 const Campground = require('../models/campground.js');
-
+const {isLoggedIn} = require('../middleware.js')
 /**
  * ***********************************************************
  *  -------------        MIDDLEWARE           ----------------
@@ -34,11 +34,11 @@ router.get('/' , catchAsync(async (req ,res)=>{
 
 
 // Create new Campground 
-router.get('/new' , (req , res) => {
+router.get('/new' , isLoggedIn ,(req , res) => {
     res.render('campgrounds/new.ejs');
 })
 
-router.post('/' , validateCampground , catchAsync(async (req , res) => {
+router.post('/' ,  isLoggedIn ,validateCampground , catchAsync(async (req , res) => {
     const campground = new Campground(req.body.campground);
     await campground.save();
     req.flash('success' , 'Successfully made a new Campground!');
@@ -57,12 +57,12 @@ router.get('/:id' , catchAsync(async( req , res) => {
 
 
 // Editing existing data in the database
-router.get('/:id/edit' , catchAsync(async( req , res) => {
+router.get('/:id/edit' ,  isLoggedIn , catchAsync(async( req , res) => {
     const campground = await Campground.findById(req.params.id)
     res.render('campgrounds/edit.ejs' , { campground });
 }))
 
-router.put('/:id' , validateCampground , catchAsync(async(req , res) =>{
+router.put('/:id' ,  isLoggedIn , validateCampground , catchAsync(async(req , res) =>{
     const { id } = req.params;
     const campground = await Campground.findByIdAndUpdate(id , { ...req.body.campground });
     req.flash('success' , 'Successfully updated the Campground!');
@@ -71,7 +71,7 @@ router.put('/:id' , validateCampground , catchAsync(async(req , res) =>{
 
 
 // Deleting a campground
-router.delete('/:id' , catchAsync(async(req , res) =>{
+router.delete('/:id' ,  isLoggedIn , catchAsync(async(req , res) =>{
     const { id } = req.params;
     await Campground.findByIdAndDelete(id);
     req.flash('success' , 'Successfully deleted the Campground!');
