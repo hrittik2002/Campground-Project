@@ -13,3 +13,7 @@ const UserSchema = new Schema({
 UserSchema.plugin(passportLocalMongoose);
 
 module.exports = mongoose.model('User' , UserSchema);
+
+/***
+ * Note here we are using passport so, username and passward the not manually stored by us in the database , passport will store it for us
+ */
