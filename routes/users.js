@@ -6,14 +6,14 @@ const User = require('../models/user.js')
 const users = require('../controllers/users.js')
 
 // register
-router.get('/register', users.renderRgister);
-
-router.post('/register', catchAsync(users.register));
+router.route('/register')
+    .get(users.renderRgister)
+    .post(catchAsync(users.register))
 
 // login
-router.get('/login', users.renderLogin)
-
-router.post('/login', passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), users.login)
+router.route('/login')
+    .get(users.renderLogin)
+    .post(passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), users.login)
 
 //logout
 router.get('/logout' , users.logout)

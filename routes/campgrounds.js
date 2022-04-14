@@ -14,26 +14,18 @@ const campgrounds = require('../controllers/campgrounds.js')
  */
 
 
+router.route('/')
+    .get(catchAsync(campgrounds.index))
+    .post(isLoggedIn ,validateCampground , catchAsync(campgrounds.createCampground))
 
-router.get('/' , catchAsync(campgrounds.index))
-
-
-// Create new Campground 
 router.get('/new' , isLoggedIn , campgrounds.renderNewForm)
 
-router.post('/' ,  isLoggedIn ,validateCampground , catchAsync(campgrounds.createCampground))
+router.route('/:id')
+    .get(catchAsync(campgrounds.showCampground))
+    .put(isLoggedIn , isAuthor ,validateCampground , catchAsync(campgrounds.updateCampground)) // Update a campground
+    .delete(isLoggedIn , isAuthor ,catchAsync(campgrounds.deleteCampground)) // delete Campground
 
-//  Reading data From Database
-router.get('/:id' , catchAsync(campgrounds.showCampground))
-
-// Editing existing data in the database
-router.get('/:id/edit' ,  isLoggedIn , isAuthor ,catchAsync(campgrounds.renderEditForm))
-
-router.put('/:id' ,  isLoggedIn , isAuthor ,validateCampground , catchAsync(campgrounds.updateCampground))
-
-// Deleting a campground
-router.delete('/:id' ,  isLoggedIn , isAuthor ,catchAsync(campgrounds.deleteCampground))
-
+router.get('/:id/edit' ,  isLoggedIn , isAuthor ,catchAsync(campgrounds.renderEditForm)) // Edit a campground
 
 
 /**
