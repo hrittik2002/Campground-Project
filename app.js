@@ -18,8 +18,9 @@ const User = require('./models/user.js')
 const userRoutes = require('./routes/users')
 const campgroundRoutes = require('./routes/campgrounds.js')
 const reviewRoutes = require('./routes/reviews.js')
-
-
+const dbUrl = process.env.DB_URL
+const dbUrl2 = process.env.DB_URL || 'mongodb://localhost:27017/yelp-camp'
+const MongoDBStore = require('connect-mongodb-session')(session);
 
 /**
  * ***********************************************
@@ -27,7 +28,7 @@ const reviewRoutes = require('./routes/reviews.js')
  * ***********************************************
  */
 
-mongoose.connect('mongodb://localhost:27017/yelp-camp')
+mongoose.connect(dbUrl2)
 
 /***
  * If there is error the print connection error
@@ -61,8 +62,20 @@ app.use(express.urlencoded({ extended : true }))
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname , 'public')))
 
+const secret = process.env.SECRET || 'apple';
+
+const store = new MongoDBStore({
+    url : dbUrl2,
+    secret,
+    touchAfter: 27 * 60 * 60
+})
+
+store.on("error" , function(e){
+    console.log("SESSION STORE ERROR" , e)
+})
 const sessionConfig = {
-    secret : 'apple',
+    store,
+    secret,
     resave : false,
     saveUninitialized : true,
     cookie : {
@@ -119,7 +132,7 @@ app.use((err , req , res , next)=>{
 
 
 
-
-app.listen(3000 , () => {
-    console.log("Serving port at 3000")
+const port = process.env.PORT || 3000;
+app.listen(port , () => {
+    console.log(`Serving port at ${port}`)
 })
